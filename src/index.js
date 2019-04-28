@@ -72,18 +72,24 @@ function Square(props) {
   
   class Board extends React.Component {
 
-    // 생성자 초기화
+    // 1. 생성자 초기화
+    // 2. 초기화 수정
     constructor(props) {
       super(props);
       this.state = {
         squares : Array(9).fill(null),
+        xIsNext : true,
       }
     }
-
+  
+    // 1. xIsNext 데이터 변경 추가 (번갈아 가면서 바뀜- 기존값의 !니까)
     handleClick(i) {
       const squares = this.state.squares.slice();
-      squares[i] = 'X';
-      this.setState({squares: squares});
+      squares[i] = this.state.xIsNext ? 'X' : 'O';
+      this.setState({
+        squares: squares,
+        xIsNext: !this.state.xIsNext,
+      });
     }
 
     renderSquare(i) {
@@ -104,7 +110,15 @@ function Square(props) {
     }
   
     render() {
-      const status = 'Next player: X';
+      // 1. this.state.xIsNext 값에 따라 O/X가 다르게 그려져야 함.
+      // 2. state 값 변화
+      const winner = calculateWinner(this.state.squares);
+      let status;
+      if (winner) {
+        status = 'winner: ' + winner;
+      } else {
+        status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      }
   
       return (
         <div>
@@ -143,6 +157,27 @@ function Square(props) {
         </div>
       );
     }
+  }
+
+
+  function calculateWinner(squares) {
+    const lines = [
+      [0,1,2],
+      [3,4,5],
+      [6,7,8],
+      [0,3,6],
+      [1,4,7],
+      [2,5,8],
+      [0,4,8],
+      [2,4,6],
+    ];
+    for (let i = 0; i < lines.length; i++) {
+      const [a,b,c] = lines[i];
+      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        return squares[a];
+      }
+    }
+    return null;
   }
   
   // ========================================
