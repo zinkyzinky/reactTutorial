@@ -2,59 +2,73 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-class Square extends React.Component {
-
-    // 2. 더이상 Square가 상태를 가지지 않도록 초기화 삭제
-
-    // 1. 데이터 관리를 위해 생성자 초기화 선언.
-    // constructor(props) {
-    //     // Javascript 클래스에서 서브 클래스의 생성자를 정의할 때
-    //     // super(); 메서드를 명시적으로 호출해줘야 함.
-    //     super(props);
-    //     this.state = {
-    //         value : null,
-    //     };
-    // }
-
-    // 4. Game -> Board -> Square 순으로 처리되고 있어서 data 정리 위한 수정.
-    //    this.state.value -> this.props.value 파라미터로 전달받은 데이터로 변경.
-    //    this.setState -> this.props.onClick  Board로 부터 전달받는 파라미터의 onClick 이벤트 적용
-    render() {
-      return (
-        <button className="square" onClick={() => this.props.onClick()}>
-          {this.props.value}
-        </button>
-      );
-    }
+// 2. 함수 컴포넌트라는 간단한 문법으로 구현
+//    - 1.보다 더 간단하게 props를 가져오고, 랜더링 해야 할 것을 반환하는 함수를 작성할 수 있음.
+//    - this.props -> props 로 변경. 
+//    - onClick={() => props.onClick()} -> onClick = {props.onClick} 으로 변경.
+function Square(props) {
+  return (
+    <button className="square" onClick={props.onClick}>
+      {props.value}
+    </button>
+  );
+}
 
 
-    // 3. 현재 state의 value 표시하고, 클릭할 때 바꿔서 수정하도록 함.
-    // render() {
-    //   return (
-    //     <button className="square" onClick={() => this.setState({value: 'X'})}>
-    //       {this.state.value}
-    //     </button>
-    //   );
-    // }
+// // 1. 일반적인 React.Component를 확장한 클래스로 구현
+// class Square extends React.Component {
 
-    // 2. 사각형 클릭하면 alert 띄우기 (화살표 함수를 사용)
-    // render() {
-    //     return (
-    //         <button className="square" onClick={() => alert('click')}>
-    //             {this.props.value}
-    //         </button>
-    //     );
-    // }
+//     // 2. 더이상 Square가 상태를 가지지 않도록 초기화 삭제
 
-    // 1. 버튼에 value 넣기
-    // render() {
-    //     return (
-    //         <button className="square">
-    //             {this.props.value}
-    //         </button>
-    //     )
-    // }
-  }
+//     // 1. 데이터 관리를 위해 생성자 초기화 선언.
+//     // constructor(props) {
+//     //     // Javascript 클래스에서 서브 클래스의 생성자를 정의할 때
+//     //     // super(); 메서드를 명시적으로 호출해줘야 함.
+//     //     super(props);
+//     //     this.state = {
+//     //         value : null,
+//     //     };
+//     // }
+
+//     // 4. Game -> Board -> Square 순으로 처리되고 있어서 data 정리 위한 수정.
+//     //    this.state.value -> this.props.value 파라미터로 전달받은 데이터로 변경.
+//     //    this.setState -> this.props.onClick  Board로 부터 전달받는 파라미터의 onClick 이벤트 적용
+//     render() {
+//       return (
+//         <button className="square" onClick={() => this.props.onClick()}>
+//           {this.props.value}
+//         </button>
+//       );
+//     }
+
+
+//     // 3. 현재 state의 value 표시하고, 클릭할 때 바꿔서 수정하도록 함.
+//     // render() {
+//     //   return (
+//     //     <button className="square" onClick={() => this.setState({value: 'X'})}>
+//     //       {this.state.value}
+//     //     </button>
+//     //   );
+//     // }
+
+//     // 2. 사각형 클릭하면 alert 띄우기 (화살표 함수를 사용)
+//     // render() {
+//     //     return (
+//     //         <button className="square" onClick={() => alert('click')}>
+//     //             {this.props.value}
+//     //         </button>
+//     //     );
+//     // }
+
+//     // 1. 버튼에 value 넣기
+//     // render() {
+//     //     return (
+//     //         <button className="square">
+//     //             {this.props.value}
+//     //         </button>
+//     //     )
+//     // }
+//   }
   
   class Board extends React.Component {
 
