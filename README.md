@@ -470,8 +470,8 @@ Square에 `value` prop를 전달하도록 수정하세요.
 
 Board에서 Square로 `value`와 `onClick` 두 개의 props를 전달합니다. `onClick`은 Square가 호출할 수 있는 함수입니다. Square을 변경하기 위해 다음의 변경 사항을 구현하세요.
 
-- Square의 `rennder`에 있는 `this.state.value` 를 `this.props.value`로 변경하세요.
-- Square의 `rennder`에 있는 `this.setState()` 를 `this.props.onClick()`로 변경하세요.
+- Square의 `render`에 있는 `this.state.value` 를 `this.props.value`로 변경하세요.
+- Square의 `render`에 있는 `this.setState()` 를 `this.props.onClick()`로 변경하세요.
 - 더이상 각 Square가 상태를 가지지 않도록 Square에 정의한 `constructor`를 삭제하세요.
 
 모든 변경 사항을 구현한 Square 컴포넌트는 다음과 같습니다.
@@ -553,7 +553,7 @@ class Board extends React.Component {
 
  지금까지의 코드는 [이곳](https://codepen.io/gaearon/pen/ybbQJX?editors=0010)에서 볼 수 있습니다.
 
-이미 있는 배열을 수정하는 대신 `squares` 배열을 복사하기 위해 `.slick()`를 호출합니다. 왜 immutability이 중요한지 알고 싶다면 [이 섹션](https://reactjs.org/tutorial/tutorial.html#why-immutability-is-important)으로 이동해주세요.
+이미 있는 배열을 수정하는 대신 `squares` 배열을 복사하기 위해 `.slice()`를 호출합니다. 왜 immutability(불변성)이 중요한지 알고 싶다면 [이 섹션](https://reactjs.org/tutorial/tutorial.html#why-immutability-is-important)으로 이동해주세요.
 
 이제 사각형을 클릭하여 다시 사각형을 채울 수 있어야 하지만 상태가 각 Square가 아닌 Board 컴포넌트에 저장되어 있어 게임을 계속 구현해나가야 합니다. Board의 상태가 변경될 때마다 Square 컴포넌트들은 자동으로 다시 랜더링됩니다.
 
