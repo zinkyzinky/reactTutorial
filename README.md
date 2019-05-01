@@ -786,6 +786,21 @@ Board의 `render`에서 `status`를 선언을 수정해주세요.
 
 Board에서 `handleClick`을 일찍 반환하여 이미 누군가 이긴 게임에서 클릭하거나 이미 칠해진 사각형을 클릭하는 경우 무시하도록 변경할 수 있습니다.
 
+```Js
+  handleClick(i) {
+    const squares = this.state.squares.slice();
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext,
+    });
+  }  
+```
+
 축하합니다! 틱택토 게임을 완성하셨습니다! 이제 React의 기초를 알았습니다. 여기서 진짜 승자는 여러분입니다.
 
 지금까지의 코드는 [이곳](https://codepen.io/gaearon/pen/LyyXgK?editors=0010)에서 볼 수 있습니다.

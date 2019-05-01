@@ -85,6 +85,9 @@ function Square(props) {
     // 1. xIsNext 데이터 변경 추가 (번갈아 가면서 바뀜- 기존값의 !니까)
     handleClick(i) {
       const squares = this.state.squares.slice();
+      if (calculateWinner(squares) || squares[i]) {
+        return;
+      }
       squares[i] = this.state.xIsNext ? 'X' : 'O';
       this.setState({
         squares: squares,
