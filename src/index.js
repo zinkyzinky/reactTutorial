@@ -74,36 +74,32 @@ function Square(props) {
 
     // 1. 생성자 초기화
     // 2. 초기화 수정
-    constructor(props) {
-      super(props);
-      this.state = {
-        squares : Array(9).fill(null),
-        xIsNext : true,
-      }
-    }
-  
-    // 1. xIsNext 데이터 변경 추가 (번갈아 가면서 바뀜- 기존값의 !니까)
-    handleClick(i) {
-      const squares = this.state.squares.slice();
-      if (calculateWinner(squares) || squares[i]) {
-        return;
-      }
-      squares[i] = this.state.xIsNext ? 'X' : 'O';
-      this.setState({
-        squares: squares,
-        xIsNext: !this.state.xIsNext,
-      });
-    }
+    // 3. 생성자 삭제 -> 전달 받는 데이터로 가공하기 위해서, 필요없어졌음.
+    // constructor(props) {
+    //   super(props);
+    //   this.state = {
+    //     squares : Array(9).fill(null),
+    //     xIsNext : true,
+    //   }
+    // }
 
     renderSquare(i) {
 
-      // 3. Board -> Squre로 value와 onClick 두개의 props 전달
+      // 4. 해당 class 안에 state를 적용하는 생성자를 없앴기 때문에 전달 받는 파라미터의 값으로 변경해줘야 함.
       return (
-        <Square 
-          value = {this.state.squares[i]} 
-          onClick = {() => this.handleClick(i)}
-        />
+        <Square
+          value = {this.props.squares[i]}
+          onClick = {() => this.props.onClick(i)}
+          />
       );
+
+      // 3. Board -> Squre로 value와 onClick 두개의 props 전달
+      // return (
+      //   <Square 
+      //     value = {this.state.squares[i]} 
+      //     onClick = {() => this.handleClick(i)}
+      //   />
+      // );
 
       // 2. squares 배열에 적재하고 ? 전달?
       // return <Square value = {this.state.squares[i]} />;
@@ -115,17 +111,17 @@ function Square(props) {
     render() {
       // 1. this.state.xIsNext 값에 따라 O/X가 다르게 그려져야 함.
       // 2. state 값 변화
-      const winner = calculateWinner(this.state.squares);
-      let status;
-      if (winner) {
-        status = 'winner: ' + winner;
-      } else {
-        status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-      }
+      // 3. status 값을 Game 에서 가져와서 할거니까 없어도 됨? 게임 히스토리를 다른 곳에서 관리해줌.
+      // const winner = calculateWinner(this.state.squares);
+      // let status;
+      // if (winner) {
+      //   status = 'winner: ' + winner;
+      // } else {
+      //   status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      // }
   
       return (
         <div>
-          <div className="status">{status}</div>
           <div className="board-row">
             {this.renderSquare(0)}
             {this.renderSquare(1)}
@@ -147,21 +143,98 @@ function Square(props) {
   }
   
   class Game extends React.Component {
+
+    /* 1. 생성자를 추가하여 Game의 초기 상태를 설정 */
+    constructor(props) {
+      super(props);
+      this.state = {
+        history: [{
+          squares: Array(9).fill(null),
+        }],
+        stepNumber: 0,
+        xIsNext: true,
+      };
+    }
+
+
+    // 2. Board에서 옮겨왔음! 내용 수정.
+    // 1. xIsNext 데이터 변경 추가 (번갈아 가면서 바뀜- 기존값의 !니까)
+    handleClick(i) {
+      const history = this.state.history.slice(0, this.state.stepNumber + 1);
+      const current = history[history.length -1];
+      const squares = current.squares.slice();
+      // const squares = this.state.squares.slice();
+      if (calculateWinner(squares) || squares[i]) {
+        return;
+      }
+      squares[i] = this.state.xIsNext ? 'X' : 'O';
+      this.setState({
+        history: history.concat([{
+          squares: squares
+        }]),
+        stepNumber: history.length,
+        xIsNext: !this.state.xIsNext,
+      });
+
+      // 수정 
+      // this.setState({
+      //   squares: squares,
+      //   xIsNext: !this.state.xIsNext,
+      // });
+    }
+
+    jumpTo(step) {
+      this.setState({
+        stepNumber: step,
+        xIsNext: (step % 2) === 0,
+      });
+    }
+
+    /* 히스토리 전체를 보고 게임 상태를 계산하여 가져올 수 있어야 함. */
     render() {
+      const history = this.state.history;
+      const current = history[this.state.stepNumber];
+      const winner = calculateWinner(current.squares);
+
+      /** 이동을 표시하기 위해 UI 그리기 */
+      const moves = history.map((step, move) => {
+        const desc = move ? 'Go to move # ' + move : 'Go to game start';
+        return (
+          <li key={move}>
+            <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          </li>
+        );
+      });
+
+      let status;
+      if (winner) {
+        status = 'Winner: ' + winner;
+      } else {
+        status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      }
+
       return (
         <div className="game">
           <div className="game-board">
-            <Board />
+            <Board 
+              squares = {current.squares}
+              onClick = {(i) => this.handleClick(i)} />
           </div>
           <div className="game-info">
-            <div>{/* status */}</div>
-            <ol>{/* TODO */}</ol>
+            <div>{status}</div>
+            <ol>{moves}</ol>
           </div>
         </div>
       );
     }
   }
-
+  
+  // ========================================
+  
+  ReactDOM.render(
+    <Game />,
+    document.getElementById('root')
+  );
 
   function calculateWinner(squares) {
     const lines = [
@@ -182,11 +255,3 @@ function Square(props) {
     }
     return null;
   }
-  
-  // ========================================
-  
-  ReactDOM.render(
-    <Game />,
-    document.getElementById('root')
-  );
-  

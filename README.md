@@ -792,7 +792,6 @@ Board에서 `handleClick`을 일찍 반환하여 이미 누군가 이긴 게임�
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
-
     squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
       squares: squares,
